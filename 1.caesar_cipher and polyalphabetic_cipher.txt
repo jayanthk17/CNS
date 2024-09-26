@@ -1,0 +1,52 @@
+def caesar_cipher(text, shift, decrypt=False):
+    shifted_text = ""
+    for char in text:
+        if char.isalpha():  # Check if character is a letter
+            if decrypt:
+                shifted = ord(char) - shift
+            else:
+                shifted = ord(char) + shift
+
+            if char.islower():
+                base = ord('a')
+            else:
+                base = ord('A')
+
+            shifted = (shifted - base) % 26 + base
+            shifted_text += chr(shifted)
+        else:
+            shifted_text += char  # Non-alphabetical characters remain unchanged
+    return shifted_text
+
+# Example usage:
+plaintext = input("enter the message:")
+shift = int(input("enter key:"))
+
+# Encrypting the plaintext
+encrypted_text = caesar_cipher(plaintext, shift)
+print("Original:", plaintext)
+print("Encrypted:", encrypted_text)
+
+# Decrypting the encrypted text
+decrypted_text = caesar_cipher(encrypted_text, shift, decrypt=True)
+print("Decrypted:", decrypted_text)
+
+
+
+
+
+
+def polyalphabetic_cipher(text, key, mode='encrypt'):
+    key = key.upper()
+    text = ''.join(filter(str.isalpha, text.upper()))
+    return ''.join(
+        chr((ord(c) - ord('A') + (1 if mode == 'encrypt' else -1) * (ord(key[i % len(key)]) - ord('A'))) % 26 + ord('A'))
+        for i, c in enumerate(text)
+    )
+
+text = input("Enter the message: ")
+key = input("Enter the keyword: ")
+mode = input("Enter the mode (encrypt or decrypt): ")
+
+result = polyalphabetic_cipher(text, key, mode)
+print(f"{'Encrypted' if mode == 'encrypt' else 'Decrypted'} Text: {result}")
