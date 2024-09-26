@@ -1,0 +1,33 @@
+#Prgm-9 simplified DES to make a study of ids(for ex. snort).
+def feistel_round(block, key):
+    left, right = block[:4], block[4:]
+    f_result = int(left, 2) ^ int(key, 2)  # XOR operation as a simple "substitution"
+    f_result = bin(f_result)[2:].zfill(4)   # Convert to binary and pad to 4 bits
+    new_right = bin(int(right, 2) ^ int(f_result, 2))[2:].zfill(4)  # XOR with right part
+    return right + new_right
+
+def simplified_des_encrypt(plaintext, rounds, key):
+    block_size = 8
+    while len(plaintext) % block_size != 0:
+        plaintext += "0"  # Padding with zeros if necessary
+
+    ciphertext = ""
+    for i in range(0, len(plaintext), block_size):
+        block = plaintext[i:i+block_size]
+        for _ in range(rounds):
+            block = feistel_round(block, key)
+        ciphertext += block
+
+    return ciphertext
+
+def main():
+    plaintext = input("Enter the message: ")
+    key = input("Enter the key: ")
+    rounds = int(input("Enter the number of rounds: "))
+    encrypted_text = simplified_des_encrypt(plaintext, rounds, key)
+
+    print("Plaintext:", plaintext)
+    print("Encrypted Text:", encrypted_text)
+
+if __name__ == "__main__":
+    main()
